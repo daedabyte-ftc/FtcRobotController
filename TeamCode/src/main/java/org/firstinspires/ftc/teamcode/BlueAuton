@@ -1,0 +1,127 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
+
+@Autonomous
+public class BlueAuton extends LinearOpMode {
+
+
+    private DcMotor leftFront, leftBack, rightFront, rightBack;
+    private Servo launcherServo;
+
+    @Override
+    public void runOpMode() throws InterruptedException {
+        // Initialize drivetrain motors
+        leftFront = hardwareMap.dcMotor.get("leftFront");
+        leftBack = hardwareMap.dcMotor.get("leftBack");
+        rightFront = hardwareMap.dcMotor.get("rightFront");
+        rightBack = hardwareMap.dcMotor.get("rightBack");
+
+        //initialize other motors
+        DcMotor launcherMotor = hardwareMap.dcMotor.get("launcherMotor");
+        launcherServo = hardwareMap.servo.get("launcherServo");
+        DcMotor intakeMotor = hardwareMap.dcMotor.get("intakeMotor");
+
+        //initialize launcher pos
+        launcherServo.setPosition(0);
+
+        // motor directions (per-motor, verified)
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBack.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        launcherMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        // ensure motors stop immediately when power is zero
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        launcherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        waitForStart();
+
+
+        // Autonomous sequence
+        intakeMotor.setPower(1.0);
+        launcherMotor.setPower(0.5);
+        launcherRev(500);
+        Forward(1300);
+        stopDrive();
+        shootBall();
+        shootBall();
+        shootBall();
+        shootBall();
+        Right(700);
+        stopDrive();
+        while (opModeIsActive()) {
+            idle();
+        }
+    }
+
+    // Function declarations
+    public void launcherRev(int timeMs) {
+
+        sleep(timeMs);
+        leftFront.setPower(0);
+        leftBack.setPower(0);
+        rightFront.setPower(0);
+        rightBack.setPower(0);
+    }
+    private void stopDrive() {
+        leftFront.setPower(0);
+        leftBack.setPower(0);
+        rightFront.setPower(0);
+        rightBack.setPower(0);
+    }
+
+    public void Forward(int timeMs) {
+        leftFront.setPower(0.5);
+        leftBack.setPower(0.5);
+        rightFront.setPower(0.5);
+        rightBack.setPower(0.5);
+
+        sleep(timeMs);
+        leftFront.setPower(0);
+        leftBack.setPower(0);
+        rightFront.setPower(0);
+        rightBack.setPower(0);
+    }
+    public void Left(int timeMs) {
+        leftFront.setPower(-0.5);
+        leftBack.setPower(0.5);
+        rightFront.setPower(0.5);
+        rightBack.setPower(-0.5);
+
+        sleep(timeMs);
+        leftFront.setPower(0);
+        leftBack.setPower(0);
+        rightFront.setPower(0);
+        rightBack.setPower(0);
+    }
+    public void Right(int timeMs) {
+        leftFront.setPower(0.5);
+        leftBack.setPower(-0.5);
+        rightFront.setPower(-0.5);
+        rightBack.setPower(0.5);
+
+        sleep(timeMs);
+        leftFront.setPower(0);
+        leftBack.setPower(0);
+        rightFront.setPower(0);
+        rightBack.setPower(0);
+    }
+    public void shootBall() {
+        launcherServo.setPosition(0.2);
+        sleep(1000);
+        launcherServo.setPosition(0.0);
+        sleep(1000);
+
+    }
+}
